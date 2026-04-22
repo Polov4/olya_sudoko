@@ -12,58 +12,83 @@
             --red: #ff0000; 
             --solid-fill: #00e5ff; 
             --cross-fill: rgba(0, 229, 255, 0.15);
+            --text-color: #ffffff;
+            --cell-bg: #000;
         }
-        body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; user-select: none; }
+
+        /* --- РОЗОВЫЙ РЕЖИМ --- */
+        body.cute-mode {
+            --bg: #ffeef8;
+            --neon: #ff69b4;
+            --grey: #ffffff;
+            --red: #ff4d4d;
+            --solid-fill: #ffb6c1;
+            --cross-fill: rgba(255, 105, 180, 0.15);
+            --text-color: #4a4a4a;
+            --cell-bg: #ffffff;
+        }
+
+        body { background: var(--bg); color: var(--text-color); font-family: 'Courier New', monospace; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; user-select: none; transition: background 0.3s, color 0.3s; }
         #app { width: 95%; max-width: 400px; display: flex; flex-direction: column; gap: 10px; }
         
-        /* Экраны финала */
-        #end-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        
-        /* УВЕЛИЧИЛ ВИДЕО ТУТ */
-        #end-media { 
-            max-width: 95vw; 
-            max-height: 65vh; 
-            width: auto;
-            border: 3px solid var(--neon); 
-            border-radius: 8px; 
-            box-shadow: 0 0 40px var(--neon); 
+        /* Кнопка смены режима */
+        #theme-toggle { 
+            background: var(--neon); 
+            color: #000; 
+            border: none; 
+            padding: 8px 15px; 
+            font-size: 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            border-radius: 20px; 
+            align-self: center; 
+            box-shadow: 0 0 10px var(--neon);
+            transition: 0.3s;
+            margin-bottom: 5px;
         }
-        
+
+        /* Экраны финала */
+        #end-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; flex-direction: column; align-items: center; justify-content: center; text-align: center; transition: 0.3s; }
+        body.cute-mode #end-screen { background: rgba(255, 238, 248, 0.95); } /* Светлый фон финала в милом режиме */
+
+        #end-media { max-width: 95vw; max-height: 65vh; width: auto; border: 3px solid var(--neon); border-radius: 8px; box-shadow: 0 0 40px var(--neon); }
         #end-text { font-size: 20px; margin-top: 20px; font-weight: bold; text-shadow: 0 0 10px; padding: 0 20px; }
 
         /* Верхняя панель */
-        .stats-bar { display: flex; justify-content: space-between; font-size: 14px; color: #fff; background: var(--grey); padding: 5px 10px; border-radius: 4px; border: 1px solid #333; }
-        .header { display: flex; justify-content: space-between; font-size: 11px; color: var(--neon); text-transform: uppercase; }
+        .stats-bar { display: flex; justify-content: space-between; font-size: 14px; color: var(--text-color); background: var(--grey); padding: 5px 10px; border-radius: 4px; border: 1px solid rgba(128,128,128,0.3); transition: 0.3s; }
+        .header { display: flex; justify-content: space-between; font-size: 11px; color: var(--neon); text-transform: uppercase; font-weight: bold; }
         
         .diff-bar { display: flex; justify-content: space-around; padding-bottom: 5px; }
-        .diff-btn { cursor: pointer; opacity: 0.5; font-size: 10px; border-bottom: 1px solid transparent; transition: 0.2s; }
+        .diff-btn { cursor: pointer; opacity: 0.5; font-size: 10px; border-bottom: 1px solid transparent; transition: 0.2s; color: var(--text-color); }
         .diff-btn.active { opacity: 1; color: var(--neon); border-bottom: 1px solid var(--neon); font-weight: bold; }
-        .diff-btn.locked { color: #555; cursor: not-allowed; }
+        .diff-btn.locked { color: #888; cursor: not-allowed; }
 
         /* Сетка */
-        #grid { display: grid; grid-template-columns: repeat(9, 1fr); aspect-ratio: 1/1; border: 2px solid var(--neon); background: #000; box-shadow: 0 0 10px rgba(0, 229, 255, 0.2); }
-        .cell { display: flex; align-items: center; justify-content: center; border: 0.5px solid #111; font-size: 24px; cursor: pointer; color: #777; transition: background-color 0.2s; position: relative; }
+        #grid { display: grid; grid-template-columns: repeat(9, 1fr); aspect-ratio: 1/1; border: 2px solid var(--neon); background: var(--cell-bg); box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); transition: 0.3s; }
+        .cell { display: flex; align-items: center; justify-content: center; border: 0.5px solid rgba(128,128,128,0.3); font-size: 24px; cursor: pointer; color: #777; transition: background-color 0.2s; position: relative; }
         
         /* Разделители */
-        .cell:nth-child(3n) { border-right: 2px solid #444; }
-        .cell:nth-child(9n) { border-right: 0.5px solid #111; }
-        .cell:nth-of-type(n+19):nth-of-type(-n+27), .cell:nth-of-type(n+46):nth-of-type(-n+54) { border-bottom: 2px solid #444; }
+        .cell:nth-child(3n) { border-right: 2px solid var(--neon); }
+        .cell:nth-child(9n) { border-right: 0.5px solid rgba(128,128,128,0.3); }
+        .cell:nth-of-type(n+19):nth-of-type(-n+27), .cell:nth-of-type(n+46):nth-of-type(-n+54) { border-bottom: 2px solid var(--neon); }
 
         /* Подсветка */
         .cell.selected { background-color: var(--solid-fill) !important; color: #000 !important; font-weight: bold; }
         .cell.same-num { background-color: rgba(0, 229, 255, 0.5) !important; color: #fff !important; }
+        body.cute-mode .cell.same-num { background-color: rgba(255, 105, 180, 0.4) !important; color: #000 !important; }
         .cell.highlight { background-color: var(--cross-fill) !important; }
-        .cell.fixed { color: #fff; font-weight: bold; background: #080808; }
+        .cell.fixed { color: var(--text-color); font-weight: bold; background: rgba(128,128,128,0.1); }
+        body.cute-mode .cell.fixed { color: var(--neon); background: rgba(255,105,180,0.05); }
         .cell.error { color: var(--red); text-shadow: 0 0 5px var(--red); }
-        .cell.combo-flash { background-color: var(--neon) !important; color: #000 !important; box-shadow: 0 0 15px var(--neon); } /* Вспышка */
+        .cell.combo-flash { background-color: var(--neon) !important; color: #000 !important; box-shadow: 0 0 15px var(--neon); }
 
         /* Кнопки */
         .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .num-btn { background: var(--grey); border: 1px solid var(--neon); color: #fff; padding: 15px; font-size: 24px; border-radius: 4px; cursor: pointer; transition: 0.1s; }
+        .num-btn { background: var(--grey); border: 1px solid var(--neon); color: var(--text-color); padding: 15px; font-size: 24px; border-radius: 4px; cursor: pointer; transition: 0.3s; }
         .num-btn:active { background: var(--neon); color: #000; }
         .num-btn.hidden { visibility: hidden; } 
         
-        .action-btn { background: none; border: 1px solid var(--neon); color: #fff; padding: 10px; font-size: 11px; cursor: pointer; border-radius: 4px; flex: 1; text-transform: uppercase; }
+        .action-btn { background: none; border: 1px solid var(--neon); color: var(--text-color); padding: 10px; font-size: 11px; cursor: pointer; border-radius: 4px; flex: 1; text-transform: uppercase; transition: 0.3s; }
         .action-btn.active { background: var(--neon); color: #000; font-weight: bold; }
         
         .note-grid { display: grid; grid-template-columns: repeat(3, 1fr); font-size: 9px; color: var(--neon); width: 100%; height: 100%; pointer-events: none; align-items: center; justify-items: center; }
@@ -74,10 +99,12 @@
     <div id="end-screen">
         <div id="end-media-container"></div>
         <div id="end-text"></div>
-        <button class="action-btn" style="margin-top: 30px; padding: 15px 30px; font-size: 14px;" onclick="location.reload()">ИГРАТЬ СНОВА </button>
+        <button class="action-btn" id="btn-replay" style="margin-top: 30px; padding: 15px 30px; font-size: 14px; font-weight: bold; background: var(--neon); color: #000;" onclick="location.reload()">ИГРАТЬ СНОВА</button>
     </div>
 
     <div id="app">
+        <button id="theme-toggle" onclick="toggleTheme()">METAL MODE 🤘</button>
+
         <div class="diff-bar">
             <span id="btn-easy" class="diff-btn active" onclick="setMode('easy', this)">EASY</span>
             <span id="btn-medium" class="diff-btn" onclick="setMode('medium', this)">MEDIUM</span>
@@ -92,7 +119,7 @@
         
         <div class="header">
             <div id="errs" style="color: var(--red);">ОШИБКИ: 0/3</div>
-            <div>RIDE THE LIGHTNING</div>
+            <div id="mode-label">RIDE THE LIGHTNING</div>
         </div>
 
         <div id="grid"></div>
@@ -116,6 +143,7 @@
     </div>
 
     <script>
+        let isCute = false; // Состояние режима
         let sel = null, errs = 0, isNote = false, sol = [], isOver = false;
         let notes = Array(81).fill().map(() => []);
         let score = 0, time = 0, timerInt = null;
@@ -124,14 +152,56 @@
         let winsEasy = parseInt(localStorage.getItem('win_easy')) || 0;
         let winsHard = parseInt(localStorage.getItem('win_hard')) || 0;
 
+        // --- ОБНОВЛЕННЫЙ АУДИО ДВИЖОК ---
         const sounds = {
             bell: new Audio('error_bell.mp3'),
+            cute_error: new Audio('cute_error.mp3'),
+            
             yeah1: new Audio('row_yeah1.mp3'),
             yeah2: new Audio('row_yeah2.mp3'),
+            cute_yeah: new Audio('cute_yeah.mp3'),
+            
             fade: new Audio('lose_fade.mp3'),
-            ride: new Audio('win_ride.mp3')
+            cute_lose: new Audio('cute_lose.mp3'), // милый звук луза
+            
+            ride: new Audio('win_ride.mp3'),
+            win_cute: new Audio('win_cute.mp3')
         };
-        function playSnd(name) { sounds[name].currentTime = 0; sounds[name].play().catch(()=>{}); }
+
+        function toggleTheme() {
+            isCute = !isCute;
+            document.body.classList.toggle('cute-mode');
+            const btn = document.getElementById('theme-toggle');
+            const label = document.getElementById('mode-label');
+            const btnNightmare = document.getElementById('btn-nightmare');
+            
+            if(isCute) {
+                btn.innerText = "CUTE MODE 🎀";
+                btn.style.background = "#ff69b4";
+                label.innerText = "HELLO KITTY SUDOKU";
+                if(winsHard >= 4) btnNightmare.innerText = "NIGHTMARE 🦄";
+            } else {
+                btn.innerText = "METAL MODE 🤘";
+                btn.style.background = "#00e5ff";
+                label.innerText = "RIDE THE LIGHTNING";
+                if(winsHard >= 4) btnNightmare.innerText = "NIGHTMARE 💀";
+            }
+        }
+
+        // Подмена звуков на лету
+        function playSnd(name) { 
+            let s = name;
+            if (isCute) {
+                if (name === 'bell') s = 'cute_error';
+                if (name === 'yeah1' || name === 'yeah2') s = 'cute_yeah';
+                if (name === 'ride') s = 'win_cute';
+                if (name === 'fade') s = 'cute_lose';
+            }
+            if(sounds[s]) { 
+                sounds[s].currentTime = 0; 
+                sounds[s].play().catch(()=>{}); 
+            } 
+        }
 
         function initMenu() {
             if(winsEasy < 2) {
@@ -203,7 +273,7 @@
                 score += 100;
                 document.getElementById('score').innerText = score;
                 updateHighlights(sel.i, n.toString()); 
-                checkCombo(sel.i); // ТУТ ВЫЗЫВАЕТСЯ ПРОВЕРКА
+                checkCombo(sel.i); 
                 updateKeyboard();
                 checkWin();
             } else { 
@@ -226,7 +296,6 @@
             }
         }
 
-        // НОВАЯ ЛОГИКА ДЛЯ КВАДРАТОВ 3х3
         function checkCombo(index) {
             const r = Math.floor(index / 9), c = index % 9;
             const sr = Math.floor(r / 3), sc = Math.floor(c / 3);
@@ -243,11 +312,9 @@
             const isSqFull = sqCells.every(el => el.innerText !== '' && !el.classList.contains('error') && !el.querySelector('.note-grid'));
 
             if(isRowFull || isColFull || isSqFull) {
-                // Рандомный YEAH
                 const randomYeah = Math.random() < 0.5 ? 'yeah1' : 'yeah2';
                 playSnd(randomYeah);
                 
-                // Вспышка того, что собралось
                 if (isRowFull) rowCells.forEach(el => { el.classList.add('combo-flash'); setTimeout(()=> el.classList.remove('combo-flash'), 500); });
                 if (isColFull) colCells.forEach(el => { el.classList.add('combo-flash'); setTimeout(()=> el.classList.remove('combo-flash'), 500); });
                 if (isSqFull) sqCells.forEach(el => { el.classList.add('combo-flash'); setTimeout(()=> el.classList.remove('combo-flash'), 500); });
@@ -259,6 +326,7 @@
             if (filled === 81) gameOver(true);
         }
 
+        // --- УМНЫЙ ФИНАЛ ---
         function gameOver(isWin) {
             isOver = true;
             clearInterval(timerInt);
@@ -268,23 +336,28 @@
             screen.style.display = 'flex';
 
             if (isWin) {
-                // ТУТ СТОИТ LOOP, ВИДЕО БУДЕТ КРУТИТЬСЯ БЕСКОНЕЧНО
-                mediaContainer.innerHTML = '<video id="end-media" src="win.mp4" autoplay loop playsinline muted></video>';
+                // Выбираем видео в зависимости от режима
+                let vid = isCute ? 'cute_win.mp4' : 'win.mp4';
+                mediaContainer.innerHTML = `<video id="end-media" src="${vid}" autoplay loop playsinline muted></video>`;
                 
-                text.innerText = `ТУТУТУ ТУТТУ ТУТУ ТУ ⚡\nВремя: ${formatTime(time)} | Очки: ${score}`;
+                let titleText = isCute ? "УРРААА! ТЫ УМНИЧКА! 💖" : "ТУТУТУ ТУТТУ ТУТУ ТУ ⚡";
+                text.innerText = `${titleText}\nВремя: ${formatTime(time)} | Очки: ${score}`;
                 text.style.color = "var(--neon)";
                 text.style.textShadow = "0 0 15px var(--neon)";
-                playSnd('ride');
+                
+                playSnd('ride'); // Функция playSnd сама подменит на win_cute если надо
                 
                 if(currentMode === 'easy') { winsEasy++; localStorage.setItem('win_easy', winsEasy); }
                 if(currentMode === 'hard' || currentMode === 'nightmare') { winsHard++; localStorage.setItem('win_hard', winsHard); }
             } else {
-                // ТУТ ТОЖЕ СТОИТ LOOP
-                mediaContainer.innerHTML = '<video id="end-media" src="lose.mp4" autoplay loop playsinline muted></video>';
+                let vid = isCute ? 'cute_lose.mp4' : 'lose.mp4';
+                mediaContainer.innerHTML = `<video id="end-media" src="${vid}" autoplay loop playsinline muted></video>`;
                 
-                text.innerText = "I HAVE LOST THE WILL TO LIVE... 💀";
+                let titleText = isCute ? "ОЙ... ПОПРОБУЙ ЕЩЕ РАЗОК! 🎀" : "I HAVE LOST THE WILL TO LIVE... 💀";
+                text.innerText = titleText;
                 text.style.color = "var(--red)";
                 text.style.textShadow = "0 0 15px var(--red)";
+                
                 playSnd('fade');
             }
         }
